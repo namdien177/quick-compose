@@ -1,0 +1,74 @@
+version: "3"
+
+services:
+  # PostgreSQL DB quick start.
+  postgres_db:
+    container_name: postgres_db
+    image: postgres
+    # You might want to change this.
+    restart: unless-stopped
+    volumes:
+      - ./.postgres/data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    networks:
+      - api_bridge
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATA=${POSTGRES_DATA}
+      - POSTGRES_DB=${POSTGRES_DB}
+  # Redis cache for refresh token and other features.
+  redis_cache:
+    container_name: redis_cache
+    image: redis:alpine
+    # You might want to change this.
+    restart: unless-stopped
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    env_file:
+      - .env
+    networks:
+      - api_bridge
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+  # Cassandra
+  # refer setup https://cassandra.apache.org/_/quickstart.html
+  # refer hardening https://ralph.blog.imixs.com/2020/06/22/setup-a-public-cassandra-cluster-with-docker/
+  cassandra_db:
+    container_name: cassandra_db
+    image: cassandra
+    # You might want to change this.
+    restart: unless-stopped
+    volumes:
+      - ./.cassandra/mount/data:/var/lib/cassandra
+    env_file:
+      - .env
+    networks:
+      - api_bridge
+    ports:
+      - ${CASS_DB_PORT}:${CASS_DB_PORT}
+  # MySQL DB
+  mysql_db:
+    container_name: mysql_db
+    image: mysql
+    volumes:
+      - .mysql/data:/var/lib/mysql
+    env_file:
+      - .env
+    networks:
+      - api_bridge
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
+networks:
+  api_bridge:
+    # Use a custom driver
+    driver: bridge
