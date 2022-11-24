@@ -1,0 +1,21 @@
+{
+  "name": "quick-compose",
+  "version": "1.0.0",
+  "description": "--- Tired of installing different databases whenever you needed? You can try to run those in the docker, quickly and easily without the installing process hassle.",
+  "main": "index.js",
+  "scripts": {
+    "mysql": "docker compose up -d mysql_db",
+    "postgre": "docker compose up -d postgres_db",
+    "config": "nano ./.env"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/namdien177/quick-compose.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/namdien177/quick-compose/issues"
+  },
+  "homepage": "https://github.com/namdien177/quick-compose#readme"
+}
